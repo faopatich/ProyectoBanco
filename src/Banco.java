@@ -10,7 +10,13 @@ public class Banco {
     }
 
     public void transferirEntreCuentas(Cuenta origen, Cuenta destino, double monto) {
-        origen.transferir(destino, monto);
+        if (origen == destino) {
+            System.out.println("No es posible transferirse a uno mismo.");
+        } else {
+            origen.transferir(destino, monto);
+        }
+
+
     }
 
     public void mostrarCuenta(Cuenta cuenta) {
