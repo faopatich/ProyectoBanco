@@ -17,21 +17,6 @@ public class Persona {
         return nombre;
     }
 
-    public String getDni() {
-        return dni;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
 
     public void mostrarPersona() {
         System.out.println("Nombre: " + nombre);

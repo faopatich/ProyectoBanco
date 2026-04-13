@@ -17,16 +17,8 @@ public class Cuenta {
         return numeroCuenta;
     }
 
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
     public double getSaldo() {
         return saldo;
-    }
-
-    public Persona getTitular() {
-        return titular;
     }
 
     public void depositar(double monto) {
