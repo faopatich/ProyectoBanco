@@ -57,8 +57,8 @@ public class Cuenta {
                     " de cuenta " + this.numeroCuenta +
                     " a cuenta " + destino.numeroCuenta;
 
-            this.historialTransferencias += mensaje + " (ENVIADA)\n";
-            destino.historialTransferencias += mensaje + " (RECIBIDA)\n";
+            this.historialTransferencias += mensaje + " (ENVIADA)";
+            destino.historialTransferencias += mensaje + " (RECIBIDA)";
 
             System.out.println("Transferencia realizada con exito.");
             System.out.println(mensaje);

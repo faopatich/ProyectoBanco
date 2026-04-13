@@ -19,5 +19,7 @@ public class Main {
         banco.transferirEntreCuentas(cuenta1, cuenta1, 1000);
 
         banco.mostrarReporteDeDosCuentas(cuenta1, cuenta2);
+        cuenta1.mostrarHistorialTransferencias();
+        cuenta2.mostrarHistorialTransferencias();
     }
 }
