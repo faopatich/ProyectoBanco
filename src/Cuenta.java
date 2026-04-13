@@ -3,12 +3,14 @@ public class Cuenta {
     private String tipoCuenta;
     private double saldo;
     private Persona titular;
+    private String historialTransferencias;
 
     public Cuenta(String numeroCuenta, String tipoCuenta, Persona titular) {
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
         this.titular = titular;
         this.saldo = 0;
+        this.historialTransferencias = "";
     }
 
     public String getNumeroCuenta() {
@@ -30,7 +32,14 @@ public class Cuenta {
     public void depositar(double monto) {
         if (monto > 0) {
             saldo = saldo + monto;
-            System.out.println("Deposito realizado.");
+
+            System.out.println("=== DEPOSITO REALIZADO ===");
+            System.out.println("Titular: " + this.titular.getNombre());
+            System.out.println("Cuenta: " + this.numeroCuenta);
+            System.out.println("Monto depositado: $" + monto);
+            System.out.println("Saldo actual: $" + this.saldo);
+            System.out.println("--------------------------");
+
         } else {
             System.out.println("Monto invalido.");
         }
@@ -44,7 +53,25 @@ public class Cuenta {
         } else {
             saldo = saldo - monto;
             destino.saldo = destino.saldo + monto;
+            String mensaje = "Transferencia de $" + monto +
+                    " de cuenta " + this.numeroCuenta +
+                    " a cuenta " + destino.numeroCuenta;
+
+            this.historialTransferencias += mensaje + " (ENVIADA)\n";
+            destino.historialTransferencias += mensaje + " (RECIBIDA)\n";
+
             System.out.println("Transferencia realizada con exito.");
+            System.out.println(mensaje);
+            System.out.println("----------------------------------");
+        }
+    }
+    public void mostrarHistorialTransferencias() {
+        System.out.println("=== HISTORIAL DE TRANSFERENCIAS ===");
+
+        if (historialTransferencias.equals("")) {
+            System.out.println("No hay transferencias.");
+        } else {
+            System.out.println(historialTransferencias);
         }
     }
 

@@ -11,6 +11,7 @@ public class Main {
         banco.registrarCuenta(cuenta1);
         banco.registrarCuenta(cuenta2);
 
+        cuenta1.depositar(0);
         cuenta1.depositar(10000);
         cuenta2.depositar(5000);
 
