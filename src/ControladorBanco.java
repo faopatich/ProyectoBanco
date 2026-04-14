@@ -7,6 +7,7 @@ public class ControladorBanco extends Usuario {
         agregarPermiso(Permiso.VER_SUCURSALES);
         agregarPermiso(Permiso.CREAR_CLIENTE);
         agregarPermiso(Permiso.CREAR_CUENTA);
+        agregarPermiso(Permiso.DAR_BAJA_CUENTA);
         agregarPermiso(Permiso.VER_CLIENTES);
         agregarPermiso(Permiso.VER_CUENTAS);
         agregarPermiso(Permiso.VER_TRANSACCIONES);

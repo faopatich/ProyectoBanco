@@ -51,6 +51,9 @@ public class Cliente extends Usuario {
     public void asignarCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
     }
+    public void darDeBajaCuenta() {
+        this.cuenta = null;
+    }
 
     public void mostrarCliente() {
         System.out.println("Codigo de cliente: " + codigoCliente);
@@ -122,4 +125,5 @@ public class Cliente extends Usuario {
             return new Cliente(this);
         }
     }
+
 }

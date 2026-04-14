@@ -5,12 +5,14 @@ public class Sucursal {
     private String nombreSucursal;
     private String direccion;
     private ArrayList<Cliente> clientes;
+    private ControladorSucursal administradorSucursal;
 
     public Sucursal(String codigoSucursal, String nombreSucursal, String direccion) {
         this.codigoSucursal = codigoSucursal;
         this.nombreSucursal = nombreSucursal;
         this.direccion = direccion;
         this.clientes = new ArrayList<Cliente>();
+        this.administradorSucursal = null;
     }
 
     public String getCodigoSucursal() {
@@ -23,6 +25,14 @@ public class Sucursal {
 
     public String getDireccion() {
         return direccion;
+    }
+
+    public ControladorSucursal getAdministradorSucursal() {
+        return administradorSucursal;
+    }
+
+    public void asignarAdministradorSucursal(ControladorSucursal administradorSucursal) {
+        this.administradorSucursal = administradorSucursal;
     }
 
     public boolean agregarCliente(Cliente cliente) {
@@ -145,6 +155,14 @@ public class Sucursal {
         System.out.println("Codigo: " + codigoSucursal);
         System.out.println("Nombre: " + nombreSucursal);
         System.out.println("Direccion: " + direccion);
+
+        if (administradorSucursal != null) {
+            System.out.println("Administrador: " + administradorSucursal.getNombre());
+            System.out.println("Username admin: " + administradorSucursal.getUsername());
+        } else {
+            System.out.println("Administrador: no asignado");
+        }
+
         System.out.println("Cantidad de clientes: " + clientes.size());
         System.out.println("Total en sucursal: $" + calcularTotalSucursal());
     }

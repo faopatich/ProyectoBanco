@@ -52,52 +52,47 @@ public class MenuSistema {
         while (opcion != 8) {
             System.out.println("\n=== MENU ADMINISTRATIVO ===");
 
-            if (usuarioLogueado.tienePermiso(Permiso.VER_SUCURSALES)) {
+            if (usuarioLogueado instanceof ControladorBanco) {
                 System.out.println("1. Ver sucursales");
-            }
-
-            if (puedeEntrarASucursal(usuarioLogueado)) {
                 System.out.println("2. Ingresar a sucursal");
-            }
-
-            if (usuarioLogueado.tienePermiso(Permiso.VER_TRANSACCIONES)) {
                 System.out.println("3. Ver historial global");
-            }
+                System.out.println("4. Ver total del banco");
+                System.out.println("8. Cerrar sesion");
+                System.out.print("Ingrese una opcion: ");
 
-            System.out.println("4. Ver total del banco");
-            System.out.println("8. Cerrar sesion");
-            System.out.print("Ingrese una opcion: ");
+                opcion = leerEntero();
 
-            opcion = leerEntero();
-
-            if (opcion == 1) {
-                if (usuarioLogueado.tienePermiso(Permiso.VER_SUCURSALES)) {
+                if (opcion == 1) {
                     banco.mostrarSucursales();
-                } else {
-                    System.out.println("No tiene permiso.");
-                }
-            } else if (opcion == 2) {
-                if (puedeEntrarASucursal(usuarioLogueado)) {
+                } else if (opcion == 2) {
                     entrarASucursal(usuarioLogueado);
-                } else {
-                    System.out.println("No tiene permiso.");
-                }
-            } else if (opcion == 3) {
-                if (usuarioLogueado.tienePermiso(Permiso.VER_TRANSACCIONES)) {
+                } else if (opcion == 3) {
                     Cuenta.mostrarHistorialGlobal();
+                } else if (opcion == 4) {
+                    System.out.println("Total del banco: $" + banco.calcularTotalBanco());
+                } else if (opcion == 8) {
+                    System.out.println("Sesion cerrada.");
                 } else {
-                    System.out.println("No tiene permiso.");
+                    System.out.println("Opcion invalida.");
                 }
-            } else if (opcion == 4) {
-                System.out.println("Total del banco: $" + banco.calcularTotalBanco());
-            } else if (opcion == 8) {
-                System.out.println("Sesion cerrada.");
-            } else {
-                System.out.println("Opcion invalida.");
+
+            } else if (usuarioLogueado instanceof ControladorSucursal) {
+                System.out.println("1. Ingresar a mi sucursal");
+                System.out.println("8. Cerrar sesion");
+                System.out.print("Ingrese una opcion: ");
+
+                opcion = leerEntero();
+
+                if (opcion == 1) {
+                    entrarASucursal(usuarioLogueado);
+                } else if (opcion == 8) {
+                    System.out.println("Sesion cerrada.");
+                } else {
+                    System.out.println("Opcion invalida.");
+                }
             }
         }
     }
-
     public void menuCliente(Cliente clienteLogueado) {
         int opcion = 0;
 
@@ -154,28 +149,51 @@ public class MenuSistema {
     public boolean puedeEntrarASucursal(Usuario usuario) {
         return usuario.tienePermiso(Permiso.CREAR_CLIENTE)
                 || usuario.tienePermiso(Permiso.CREAR_CUENTA)
+                || usuario.tienePermiso(Permiso.DAR_BAJA_CUENTA)
                 || usuario.tienePermiso(Permiso.VER_CLIENTES)
                 || usuario.tienePermiso(Permiso.VER_CUENTAS);
     }
 
+
     public void entrarASucursal(Usuario usuarioLogueado) {
-        System.out.println("\n=== INGRESAR A SUCURSAL ===");
-        System.out.print("Codigo de sucursal: ");
-        String codigo = scanner.nextLine();
+        if (usuarioLogueado instanceof ControladorBanco) {
+            System.out.println("\n=== INGRESAR A SUCURSAL ===");
+            System.out.print("Codigo de sucursal: ");
+            String codigo = scanner.nextLine();
 
-        Sucursal sucursal = banco.buscarSucursalPorCodigo(codigo);
+            Sucursal sucursal = banco.buscarSucursalPorCodigo(codigo);
 
-        if (sucursal == null) {
-            System.out.println("Sucursal no encontrada.");
-        } else {
-            menuSucursal(sucursal, usuarioLogueado);
+            if (sucursal == null) {
+                System.out.println("Sucursal no encontrada.");
+            } else {
+                menuSucursal(sucursal, usuarioLogueado);
+            }
+
+        } else if (usuarioLogueado instanceof ControladorSucursal) {
+            ControladorSucursal adminSucursal = (ControladorSucursal) usuarioLogueado;
+            Sucursal sucursal = banco.buscarSucursalPorCodigo(adminSucursal.getCodigoSucursalAsignada());
+
+            if (sucursal == null) {
+                System.out.println("La sucursal asignada no existe.");
+            } else {
+                menuSucursal(sucursal, usuarioLogueado);
+            }
         }
     }
 
     public void menuSucursal(Sucursal sucursal, Usuario usuarioLogueado) {
         int opcion = 0;
 
-        while (opcion != 5) {
+        if (usuarioLogueado instanceof ControladorSucursal) {
+            ControladorSucursal adminSucursal = (ControladorSucursal) usuarioLogueado;
+
+            if (!adminSucursal.getCodigoSucursalAsignada().equals(sucursal.getCodigoSucursal())) {
+                System.out.println("No tiene permiso para acceder a esta sucursal.");
+                return;
+            }
+        }
+
+        while (opcion != 6) {
             System.out.println("\n=== MENU SUCURSAL: " + sucursal.getNombreSucursal() + " ===");
 
             if (usuarioLogueado.tienePermiso(Permiso.CREAR_CLIENTE)) {
@@ -186,15 +204,19 @@ public class MenuSistema {
                 System.out.println("2. Crear cuenta");
             }
 
+            if (usuarioLogueado.tienePermiso(Permiso.DAR_BAJA_CUENTA)) {
+                System.out.println("3. Dar de baja cuenta");
+            }
+
             if (usuarioLogueado.tienePermiso(Permiso.VER_CLIENTES)) {
-                System.out.println("3. Ver clientes");
+                System.out.println("4. Ver clientes");
             }
 
             if (usuarioLogueado.tienePermiso(Permiso.VER_CUENTAS)) {
-                System.out.println("4. Ver resumen sucursal");
+                System.out.println("5. Ver resumen sucursal");
             }
 
-            System.out.println("5. Volver");
+            System.out.println("6. Volver");
             System.out.print("Ingrese una opcion: ");
 
             opcion = leerEntero();
@@ -212,18 +234,24 @@ public class MenuSistema {
                     System.out.println("No tiene permiso.");
                 }
             } else if (opcion == 3) {
+                if (usuarioLogueado.tienePermiso(Permiso.DAR_BAJA_CUENTA)) {
+                    darDeBajaCuenta(sucursal);
+                } else {
+                    System.out.println("No tiene permiso.");
+                }
+            } else if (opcion == 4) {
                 if (usuarioLogueado.tienePermiso(Permiso.VER_CLIENTES)) {
                     sucursal.mostrarClientes();
                 } else {
                     System.out.println("No tiene permiso.");
                 }
-            } else if (opcion == 4) {
+            } else if (opcion == 5) {
                 if (usuarioLogueado.tienePermiso(Permiso.VER_CUENTAS)) {
                     sucursal.mostrarResumenSucursal();
                 } else {
                     System.out.println("No tiene permiso.");
                 }
-            } else if (opcion == 5) {
+            } else if (opcion == 6) {
                 System.out.println("Volviendo...");
             } else {
                 System.out.println("Opcion invalida.");
@@ -468,4 +496,31 @@ public class MenuSistema {
 
         return numero;
     }
+public void darDeBajaCuenta(Sucursal sucursal) {
+    System.out.println("\n=== DAR DE BAJA CUENTA ===");
+
+    System.out.print("DNI del cliente: ");
+    String dni = scanner.nextLine();
+
+    Cliente cliente = sucursal.buscarClientePorDni(dni);
+
+    if (cliente == null) {
+        System.out.println("Cliente no encontrado en esta sucursal.");
+    } else {
+        if (cliente.getCuenta() == null) {
+            System.out.println("El cliente no tiene una cuenta asignada.");
+        } else {
+            System.out.println("Cuenta encontrada: " + cliente.getCuenta().getNumeroCuenta());
+            System.out.print("Confirma la baja de la cuenta? (si/no): ");
+            String confirmacion = scanner.nextLine();
+
+            if (confirmacion.equalsIgnoreCase("si")) {
+                cliente.darDeBajaCuenta();
+                System.out.println("La cuenta fue dada de baja correctamente.");
+            } else {
+                System.out.println("Operacion cancelada.");
+            }
+        }
+    }
+}
 }

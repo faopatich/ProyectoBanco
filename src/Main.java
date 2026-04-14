@@ -7,8 +7,8 @@ public class Main {
         Banco banco = new Banco("Banco Administrador");
         ValidadorCredenciales validador = new ValidadorCredenciales();
 
-        precargarSucursales(banco);
-        precargarUsuariosAdministrativos(banco);
+        precargarSucursalesYAdmins(banco);
+        precargarAdminGeneral(banco);
 
         MenuSistema menuSistema = new MenuSistema(scanner, banco, validador);
         menuSistema.iniciar();
@@ -16,13 +16,55 @@ public class Main {
         scanner.close();
     }
 
-    public static void precargarSucursales(Banco banco) {
-        banco.agregarSucursal(new Sucursal("S001", "Casa Central", "Av. Corrientes 1000"));
-        banco.agregarSucursal(new Sucursal("S002", "Sucursal Palermo", "Av. Santa Fe 3200"));
-        banco.agregarSucursal(new Sucursal("S003", "Sucursal Caballito", "Rivadavia 5400"));
+    public static void precargarSucursalesYAdmins(Banco banco) {
+        Sucursal casaCentral = new Sucursal("S001", "Casa Central", "Av. Corrientes 1000");
+        Sucursal palermo = new Sucursal("S002", "Sucursal Palermo", "Av. Santa Fe 3200");
+        Sucursal caballito = new Sucursal("S003", "Sucursal Caballito", "Rivadavia 5400");
+
+        ControladorSucursal adminCasaCentral = new ControladorSucursal(
+                "AS1",
+                "Admin Casa Central",
+                "20111111",
+                "casacentral@banco.com",
+                "central",
+                "1234",
+                "S001"
+        );
+
+        ControladorSucursal adminPalermo = new ControladorSucursal(
+                "AS2",
+                "Admin Palermo",
+                "20222222",
+                "palermo@banco.com",
+                "palermo",
+                "1234",
+                "S002"
+        );
+
+        ControladorSucursal adminCaballito = new ControladorSucursal(
+                "AS3",
+                "Admin Caballito",
+                "20333333",
+                "caballito@banco.com",
+                "caballito",
+                "1234",
+                "S003"
+        );
+
+        casaCentral.asignarAdministradorSucursal(adminCasaCentral);
+        palermo.asignarAdministradorSucursal(adminPalermo);
+        caballito.asignarAdministradorSucursal(adminCaballito);
+
+        banco.agregarSucursal(casaCentral);
+        banco.agregarSucursal(palermo);
+        banco.agregarSucursal(caballito);
+
+        banco.agregarUsuarioSistema(adminCasaCentral);
+        banco.agregarUsuarioSistema(adminPalermo);
+        banco.agregarUsuarioSistema(adminCaballito);
     }
 
-    public static void precargarUsuariosAdministrativos(Banco banco) {
+    public static void precargarAdminGeneral(Banco banco) {
         ControladorBanco adminGeneral = new ControladorBanco(
                 "U1",
                 "Administrador General",
@@ -32,16 +74,6 @@ public class Main {
                 "1234"
         );
 
-        ControladorSucursal operadorSucursal = new ControladorSucursal(
-                "U2",
-                "Operador Sucursal",
-                "22222222",
-                "operador@banco.com",
-                "operador",
-                "1234"
-        );
-
         banco.agregarUsuarioSistema(adminGeneral);
-        banco.agregarUsuarioSistema(operadorSucursal);
     }
 }
