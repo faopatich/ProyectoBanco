@@ -3,14 +3,41 @@ import java.util.ArrayList;
 public class Banco {
     private String nombreBanco;
     private ArrayList<Sucursal> sucursales;
+    private ArrayList<Usuario> usuariosSistema;
 
     public Banco(String nombreBanco) {
         this.nombreBanco = nombreBanco;
         this.sucursales = new ArrayList<Sucursal>();
+        this.usuariosSistema = new ArrayList<Usuario>();
     }
 
     public String getNombreBanco() {
         return nombreBanco;
+    }
+
+    public void agregarUsuarioSistema(Usuario usuario) {
+        usuariosSistema.add(usuario);
+    }
+
+    public ArrayList<Usuario> getUsuariosSistema() {
+        return usuariosSistema;
+    }
+
+    public boolean existeUsernameSistema(String username) {
+        boolean existe = false;
+        int i = 0;
+
+        while (i < usuariosSistema.size() && !existe) {
+            Usuario actual = usuariosSistema.get(i);
+
+            if (actual.getUsername().equals(username)) {
+                existe = true;
+            }
+
+            i = i + 1;
+        }
+
+        return existe;
     }
 
     public boolean agregarSucursal(Sucursal sucursal) {
@@ -32,10 +59,10 @@ public class Banco {
         int i = 0;
 
         while (i < sucursales.size() && sucursalEncontrada == null) {
-            Sucursal sucursalActual = sucursales.get(i);
+            Sucursal actual = sucursales.get(i);
 
-            if (sucursalActual.getCodigoSucursal().equals(codigoSucursal)) {
-                sucursalEncontrada = sucursalActual;
+            if (actual.getCodigoSucursal().equals(codigoSucursal)) {
+                sucursalEncontrada = actual;
             }
 
             i = i + 1;
@@ -56,14 +83,20 @@ public class Banco {
         return cuentaEncontrada;
     }
 
-    public boolean existeNumeroCuenta(String numeroCuenta) {
-        boolean existe = false;
+    public Cliente buscarClienteGlobalPorDni(String dni) {
+        Cliente clienteEncontrado = null;
+        int i = 0;
 
-        if (buscarCuentaEnTodoElBanco(numeroCuenta) != null) {
-            existe = true;
+        while (i < sucursales.size() && clienteEncontrado == null) {
+            clienteEncontrado = sucursales.get(i).buscarClientePorDni(dni);
+            i = i + 1;
         }
 
-        return existe;
+        return clienteEncontrado;
+    }
+
+    public boolean existeNumeroCuenta(String numeroCuenta) {
+        return buscarCuentaEnTodoElBanco(numeroCuenta) != null;
     }
 
     public double calcularTotalBanco() {
@@ -92,5 +125,9 @@ public class Banco {
                 i = i + 1;
             }
         }
+    }
+
+    public ArrayList<Sucursal> getSucursales() {
+        return sucursales;
     }
 }
