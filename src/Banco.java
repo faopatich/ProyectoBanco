@@ -1,28 +1,96 @@
+import java.util.ArrayList;
+
 public class Banco {
     private String nombreBanco;
+    private ArrayList<Sucursal> sucursales;
 
     public Banco(String nombreBanco) {
         this.nombreBanco = nombreBanco;
+        this.sucursales = new ArrayList<Sucursal>();
     }
 
-    public void registrarCuenta(Cuenta cuenta) {
-        System.out.println("Cuenta registrada en " + nombreBanco + ": " + cuenta.getNumeroCuenta());
+    public String getNombreBanco() {
+        return nombreBanco;
     }
 
-    public void transferirEntreCuentas(Cuenta origen, Cuenta destino, double monto) {
-        if (origen == destino) {
-            System.out.println("No es posible transferirse a uno mismo.");
+    public boolean agregarSucursal(Sucursal sucursal) {
+        boolean agregada = false;
+
+        if (buscarSucursalPorCodigo(sucursal.getCodigoSucursal()) == null) {
+            sucursales.add(sucursal);
+            System.out.println("Sucursal agregada correctamente.");
+            agregada = true;
         } else {
-            origen.transferir(destino, monto);
+            System.out.println("Ya existe una sucursal con ese codigo.");
         }
+
+        return agregada;
     }
 
-    public void mostrarReporteDeTresCuentas(Cuenta cuenta1, Cuenta cuenta2, Cuenta cuenta3) {
-        System.out.println("=== REPORTE DEL BANCO " + nombreBanco + " ===");
-        cuenta1.mostrarCuenta();
-        cuenta2.mostrarCuenta();
-        cuenta3.mostrarCuenta();
-        System.out.println("Total en el banco: $" + (cuenta1.getSaldo() + cuenta2.getSaldo() + cuenta3.getSaldo()));
-        System.out.println("--------------------------");
+    public Sucursal buscarSucursalPorCodigo(String codigoSucursal) {
+        Sucursal sucursalEncontrada = null;
+        int i = 0;
+
+        while (i < sucursales.size() && sucursalEncontrada == null) {
+            Sucursal sucursalActual = sucursales.get(i);
+
+            if (sucursalActual.getCodigoSucursal().equals(codigoSucursal)) {
+                sucursalEncontrada = sucursalActual;
+            }
+
+            i = i + 1;
+        }
+
+        return sucursalEncontrada;
+    }
+
+    public Cuenta buscarCuentaEnTodoElBanco(String numeroCuenta) {
+        Cuenta cuentaEncontrada = null;
+        int i = 0;
+
+        while (i < sucursales.size() && cuentaEncontrada == null) {
+            cuentaEncontrada = sucursales.get(i).buscarCuentaPorNumero(numeroCuenta);
+            i = i + 1;
+        }
+
+        return cuentaEncontrada;
+    }
+
+    public boolean existeNumeroCuenta(String numeroCuenta) {
+        boolean existe = false;
+
+        if (buscarCuentaEnTodoElBanco(numeroCuenta) != null) {
+            existe = true;
+        }
+
+        return existe;
+    }
+
+    public double calcularTotalBanco() {
+        double total = 0;
+        int i = 0;
+
+        while (i < sucursales.size()) {
+            total = total + sucursales.get(i).calcularTotalSucursal();
+            i = i + 1;
+        }
+
+        return total;
+    }
+
+    public void mostrarSucursales() {
+        System.out.println("=== SUCURSALES DEL BANCO " + nombreBanco + " ===");
+
+        if (sucursales.size() == 0) {
+            System.out.println("No hay sucursales cargadas.");
+        } else {
+            int i = 0;
+
+            while (i < sucursales.size()) {
+                System.out.println("----------------------------");
+                sucursales.get(i).mostrarResumenSucursal();
+                i = i + 1;
+            }
+        }
     }
 }

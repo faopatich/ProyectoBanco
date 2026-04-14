@@ -1,85 +1,125 @@
 public class Cuenta {
-    private int numeroCuenta;
+    private String numeroCuenta;
     private String tipoCuenta;
     private double saldo;
-    private Persona titular;
-    private String historialTransferencias;
+    private Cliente titular;
 
-    public Cuenta(int numeroCuenta, String tipoCuenta, Persona titular) {
+    private static String historialGlobal = "";
+
+    public Cuenta(String numeroCuenta, String tipoCuenta, Cliente titular) {
         this.numeroCuenta = numeroCuenta;
         this.tipoCuenta = tipoCuenta;
         this.titular = titular;
         this.saldo = 0;
-        this.historialTransferencias = "";
     }
 
-    public int getNumeroCuenta() {
+    public String getNumeroCuenta() {
         return numeroCuenta;
+    }
+
+    public String getTipoCuenta() {
+        return tipoCuenta;
     }
 
     public double getSaldo() {
         return saldo;
     }
 
-    public void depositar(double monto) {
+    public Cliente getTitular() {
+        return titular;
+    }
+
+    public boolean depositar(double monto) {
+        boolean operacionExitosa = false;
+
         if (monto > 0) {
             saldo = saldo + monto;
 
-            System.out.println("=== DEPOSITO REALIZADO ===");
-            System.out.println("Titular: " + this.titular.getNombre());
-            System.out.println("Cuenta: " + this.numeroCuenta);
-            System.out.println("Monto depositado: $" + monto);
-            System.out.println("Saldo actual: $" + this.saldo);
-            System.out.println("--------------------------");
+            String mensaje = "DEPOSITO | Titular: " + titular.getNombre()
+                    + " | Cuenta: " + numeroCuenta
+                    + " | Monto: $" + monto
+                    + " | Saldo actual: $" + saldo;
 
-        } else {
-            System.out.println("=== DEPOSITO NO REALIZADO ===");
-            System.out.println("Titular: " + this.titular.getNombre());
-            System.out.println("Cuenta: " + this.numeroCuenta);
-            System.out.println("Monto depositado: $" + monto);
-            System.out.println("Saldo actual: $" + this.saldo);
-            System.out.println("Motivo: monto invalido.");
-            System.out.println("Deposite un monto mayor a 0.");
-            System.out.println("--------------------------");
-        }
-    }
-
-    public void transferir(Cuenta destino, double monto) {
-        if (monto <= 0) {
-            System.out.println("El monto debe ser mayor a 0.");
-
-        } else if (monto > saldo) {
-            System.out.println("Saldo insuficiente.");
-        } else {
-            saldo = saldo - monto;
-            destino.saldo = destino.saldo + monto;
-            String mensaje = "Transferencia de $" + monto +
-                    " de cuenta " + this.numeroCuenta +
-                    " a cuenta " + destino.numeroCuenta;
-
-            this.historialTransferencias += mensaje + " (ENVIADA)\n";
-            destino.historialTransferencias += mensaje + " (RECIBIDA)\n";
-
-            System.out.println("Transferencia realizada con exito.");
+            historialGlobal = historialGlobal + mensaje + "\n";
             System.out.println(mensaje);
-            System.out.println("----------------------------------");
-        }
-    }
-    public void mostrarHistorialTransferencias() {
-        System.out.println("=== HISTORIAL DE TRANSFERENCIAS ===");
-
-        if (historialTransferencias.equals("")) {
-            System.out.println("No hay transferencias.");
+            operacionExitosa = true;
         } else {
-            System.out.println(historialTransferencias);
+            System.out.println("Monto invalido. Debe ser mayor a 0.");
         }
+
+        return operacionExitosa;
+    }
+
+    public boolean extraer(double monto) {
+        boolean operacionExitosa = false;
+
+        if (monto > 0) {
+            if (monto <= saldo) {
+                saldo = saldo - monto;
+
+                String mensaje = "EXTRACCION | Titular: " + titular.getNombre()
+                        + " | Cuenta: " + numeroCuenta
+                        + " | Monto: $" + monto
+                        + " | Saldo actual: $" + saldo;
+
+                historialGlobal = historialGlobal + mensaje + "\n";
+                System.out.println(mensaje);
+                operacionExitosa = true;
+            } else {
+                System.out.println("Saldo insuficiente.");
+            }
+        } else {
+            System.out.println("Monto invalido. Debe ser mayor a 0.");
+        }
+
+        return operacionExitosa;
+    }
+
+    public boolean transferir(Cuenta destino, double monto) {
+        boolean operacionExitosa = false;
+
+        if (destino != null) {
+            if (monto > 0) {
+                if (monto <= saldo) {
+                    saldo = saldo - monto;
+                    destino.saldo = destino.saldo + monto;
+
+                    String mensaje = "TRANSFERENCIA | De: " + titular.getNombre()
+                            + " (" + numeroCuenta + ")"
+                            + " -> A: " + destino.titular.getNombre()
+                            + " (" + destino.numeroCuenta + ")"
+                            + " | Monto: $" + monto;
+
+                    historialGlobal = historialGlobal + mensaje + "\n";
+                    System.out.println(mensaje);
+                    operacionExitosa = true;
+                } else {
+                    System.out.println("Saldo insuficiente.");
+                }
+            } else {
+                System.out.println("Monto invalido. Debe ser mayor a 0.");
+            }
+        } else {
+            System.out.println("La cuenta destino no existe.");
+        }
+
+        return operacionExitosa;
     }
 
     public void mostrarCuenta() {
         System.out.println("Numero de cuenta: " + numeroCuenta);
         System.out.println("Tipo de cuenta: " + tipoCuenta);
         System.out.println("Saldo: $" + saldo);
-        titular.mostrarPersona();
-
     }
+
+    public static void mostrarHistorialGlobal() {
+        System.out.println("=== HISTORIAL GLOBAL DE OPERACIONES ===");
+
+        if (historialGlobal.equals("")) {
+            System.out.println("No hay operaciones registradas.");
+        } else {
+            System.out.println(historialGlobal);
+        }
+    }
+
 }

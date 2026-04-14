@@ -1,32 +1,43 @@
 public class Persona {
     private String nombre;
-    private int dni;
+    private String dni;
     private String direccion;
     private int edad;
-    private String correo;
+    private String correoElectronico;
 
-    public Persona(String nombre, int dni, String direccion, int edad, String correo) {
+    public Persona(String nombre, String dni, String direccion, int edad, String correoElectronico) {
         this.nombre = nombre;
         this.dni = dni;
         this.direccion = direccion;
         this.edad = edad;
-        this.correo = correo;
+        this.correoElectronico = correoElectronico;
     }
 
     public String getNombre() {
         return nombre;
     }
 
+    public String getDni() {
+        return dni;
+    }
 
-    public void mostrarPersona() {
-        System.out.println("--------------------------");
-        System.out.println("=== DATOS DEL TITULAR ===");
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void mostrarDatos() {
         System.out.println("Nombre: " + nombre);
         System.out.println("DNI: " + dni);
         System.out.println("Direccion: " + direccion);
         System.out.println("Edad: " + edad);
-        System.out.println("Correo: " + correo);
-        System.out.println("--------------------------");
+        System.out.println("Correo: " + correoElectronico);
     }
 }
-
