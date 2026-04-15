@@ -36,14 +36,6 @@ public class Cliente extends Usuario {
         return codigoCliente;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
     public Cuenta getCuenta() {
         return cuenta;
     }

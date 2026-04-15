@@ -20,10 +20,6 @@ public abstract class Usuario {
         this.permisos = new HashSet<Permiso>();
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getNombre() {
         return nombre;
     }
@@ -50,13 +46,5 @@ public abstract class Usuario {
 
     public boolean tienePermiso(Permiso permiso) {
         return permisos.contains(permiso);
-    }
-
-    public void mostrarUsuario() {
-        System.out.println("ID: " + id);
-        System.out.println("Nombre: " + nombre);
-        System.out.println("DNI: " + dni);
-        System.out.println("Correo: " + correo);
-        System.out.println("Username: " + username);
     }
 }
