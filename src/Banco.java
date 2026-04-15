@@ -3,20 +3,20 @@ import java.util.ArrayList;
 public class Banco {
     private String nombre;
     private ArrayList<Sucursal> sucursales;
-    private Admin admin;
+    private GestorOperaciones gestorOperaciones;
 
-    public Banco(String nombre, Admin admin) {
+    public Banco(String nombre) {
         this.nombre = nombre;
-        this.admin = admin;
         this.sucursales = new ArrayList<Sucursal>();
+        this.gestorOperaciones = new GestorOperaciones();
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public Admin getAdmin() {
-        return admin;
+    public GestorOperaciones getGestorOperaciones() {
+        return gestorOperaciones;
     }
 
     public void agregarSucursal(Sucursal sucursal) {
@@ -64,6 +64,45 @@ public class Banco {
 
         return clienteEncontrado;
     }
+    public Cliente buscarClientePorCuenta(Cuenta cuenta) {
+        Cliente clienteEncontrado = null;
+        int i = 0;
+
+        while (i < sucursales.size() && clienteEncontrado == null) {
+            Sucursal sucursal = sucursales.get(i);
+
+            int j = 0;
+            while (j < sucursal.getClientes().size() && clienteEncontrado == null) {
+                Cliente cliente = sucursal.getClientes().get(j);
+
+                if (cliente.getCuenta() != null) {
+                    if (cliente.getCuenta().equals(cuenta)) {
+                        clienteEncontrado = cliente;
+                    }
+                }
+
+                j = j + 1;
+            }
+
+            i = i + 1;
+        }
+
+        return clienteEncontrado;
+    }
+
+    public Sucursal buscarSucursalPorAdminUsername(String username) {
+        Sucursal sucursalEncontrada = null;
+        int i = 0;
+
+        while (i < sucursales.size() && sucursalEncontrada == null) {
+            if (sucursales.get(i).getAdmin().getUsername().equals(username)) {
+                sucursalEncontrada = sucursales.get(i);
+            }
+            i = i + 1;
+        }
+
+        return sucursalEncontrada;
+    }
 
     public double calcularTotalBanco() {
         double total = 0;
@@ -81,8 +120,37 @@ public class Banco {
         int i = 0;
 
         while (i < sucursales.size()) {
-            System.out.println(sucursales.get(i).getCodigo() + " - " + sucursales.get(i).getNombre());
+            System.out.println(
+                    sucursales.get(i).getCodigo() +
+                            " - " + sucursales.get(i).getNombre() +
+                            " | Admin: " + sucursales.get(i).getAdmin().getUsername()
+            );
             i = i + 1;
         }
+    }
+    public Cuenta buscarCuentaPorNumero(String numeroCuenta) {
+        Cuenta cuentaEncontrada = null;
+        int i = 0;
+
+        while (i < sucursales.size() && cuentaEncontrada == null) {
+            Sucursal sucursal = sucursales.get(i);
+
+            int j = 0;
+            while (j < sucursal.getClientes().size() && cuentaEncontrada == null) {
+                Cliente cliente = sucursal.getClientes().get(j);
+
+                if (cliente.getCuenta() != null) {
+                    if (cliente.getCuenta().getNumeroCuenta().equals(numeroCuenta)) {
+                        cuentaEncontrada = cliente.getCuenta();
+                    }
+                }
+
+                j = j + 1;
+            }
+
+            i = i + 1;
+        }
+
+        return cuentaEncontrada;
     }
 }

@@ -1,10 +1,23 @@
 public class UsuarioFactory {
 
-    public static Admin crearAdmin(String nombre, String dni, String username, String password) {
-        return new Admin(nombre, dni, username, password);
+    public static AdminSucursal crearAdminSucursal(
+            String nombre,
+            String dni,
+            String username,
+            String password,
+            String codigoSucursal
+    ) {
+        return new AdminSucursal(nombre, dni, username, password, codigoSucursal);
     }
 
-    public static Cliente crearCliente(String nombre, String dni, String username, String password, String direccion, int edad) {
+    public static Cliente crearCliente(
+            String nombre,
+            String dni,
+            String username,
+            String password,
+            String direccion,
+            int edad
+    ) {
         return new Cliente.Builder()
                 .setNombre(nombre)
                 .setDni(dni)

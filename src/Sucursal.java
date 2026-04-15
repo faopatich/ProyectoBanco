@@ -3,20 +3,28 @@ import java.util.ArrayList;
 public class Sucursal {
     private String codigo;
     private String nombre;
+    private AdminSucursal admin;
     private ArrayList<Cliente> clientes;
 
-    public Sucursal(String codigo, String nombre) {
+    public Sucursal(String codigo, String nombre, AdminSucursal admin) {
         this.codigo = codigo;
         this.nombre = nombre;
+        this.admin = admin;
         this.clientes = new ArrayList<Cliente>();
     }
-
+    public ArrayList<Cliente> getClientes() {
+        return clientes;
+    }
     public String getCodigo() {
         return codigo;
     }
 
     public String getNombre() {
         return nombre;
+    }
+
+    public AdminSucursal getAdmin() {
+        return admin;
     }
 
     public void agregarCliente(Cliente cliente) {
@@ -77,4 +85,5 @@ public class Sucursal {
 
         return total;
     }
+
 }
