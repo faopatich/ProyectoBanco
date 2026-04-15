@@ -1,56 +1,26 @@
 import java.util.ArrayList;
 
 public class Sucursal {
-    private String codigoSucursal;
-    private String nombreSucursal;
-    private String direccion;
+    private String codigo;
+    private String nombre;
     private ArrayList<Cliente> clientes;
-    private ControladorSucursal administradorSucursal;
 
-    public Sucursal(String codigoSucursal, String nombreSucursal, String direccion) {
-        this.codigoSucursal = codigoSucursal;
-        this.nombreSucursal = nombreSucursal;
-        this.direccion = direccion;
+    public Sucursal(String codigo, String nombre) {
+        this.codigo = codigo;
+        this.nombre = nombre;
         this.clientes = new ArrayList<Cliente>();
-        this.administradorSucursal = null;
     }
 
-    public String getCodigoSucursal() {
-        return codigoSucursal;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public String getNombreSucursal() {
-        return nombreSucursal;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public ControladorSucursal getAdministradorSucursal() {
-        return administradorSucursal;
-    }
-
-    public void asignarAdministradorSucursal(ControladorSucursal administradorSucursal) {
-        this.administradorSucursal = administradorSucursal;
-    }
-
-    public boolean agregarCliente(Cliente cliente) {
-        boolean agregado = false;
-
-        if (buscarClientePorDni(cliente.getDni()) == null) {
-            if (buscarClientePorUsername(cliente.getUsername()) == null) {
-                clientes.add(cliente);
-                System.out.println("Cliente agregado correctamente a la sucursal " + nombreSucursal + ".");
-                agregado = true;
-            } else {
-                System.out.println("Ya existe un cliente con ese username en esta sucursal.");
-            }
-        } else {
-            System.out.println("Ya existe un cliente con ese DNI en esta sucursal.");
-        }
-
-        return agregado;
+    public void agregarCliente(Cliente cliente) {
+        clientes.add(cliente);
     }
 
     public Cliente buscarClientePorDni(String dni) {
@@ -58,12 +28,9 @@ public class Sucursal {
         int i = 0;
 
         while (i < clientes.size() && clienteEncontrado == null) {
-            Cliente actual = clientes.get(i);
-
-            if (actual.getDni().equals(dni)) {
-                clienteEncontrado = actual;
+            if (clientes.get(i).getDni().equals(dni)) {
+                clienteEncontrado = clientes.get(i);
             }
-
             i = i + 1;
         }
 
@@ -75,46 +42,26 @@ public class Sucursal {
         int i = 0;
 
         while (i < clientes.size() && clienteEncontrado == null) {
-            Cliente actual = clientes.get(i);
-
-            if (actual.getUsername().equals(username)) {
-                clienteEncontrado = actual;
+            if (clientes.get(i).getUsername().equals(username)) {
+                clienteEncontrado = clientes.get(i);
             }
-
             i = i + 1;
         }
 
         return clienteEncontrado;
     }
 
-    public Cuenta buscarCuentaPorNumero(String numeroCuenta) {
-        Cuenta cuentaEncontrada = null;
-        int i = 0;
-
-        while (i < clientes.size() && cuentaEncontrada == null) {
-            Cliente actual = clientes.get(i);
-
-            if (actual.getCuenta() != null) {
-                if (actual.getCuenta().getNumeroCuenta().equals(numeroCuenta)) {
-                    cuentaEncontrada = actual.getCuenta();
-                }
+    public void mostrarClientes() {
+        if (clientes.size() == 0) {
+            System.out.println("No hay clientes.");
+        } else {
+            int i = 0;
+            while (i < clientes.size()) {
+                System.out.println("-------------------");
+                clientes.get(i).mostrarCliente();
+                i = i + 1;
             }
-
-            i = i + 1;
         }
-
-        return cuentaEncontrada;
-    }
-
-    public Cuenta buscarCuentaPorDni(String dni) {
-        Cuenta cuenta = null;
-        Cliente cliente = buscarClientePorDni(dni);
-
-        if (cliente != null) {
-            cuenta = cliente.getCuenta();
-        }
-
-        return cuenta;
     }
 
     public double calcularTotalSucursal() {
@@ -122,52 +69,12 @@ public class Sucursal {
         int i = 0;
 
         while (i < clientes.size()) {
-            Cliente actual = clientes.get(i);
-
-            if (actual.getCuenta() != null) {
-                total = total + actual.getCuenta().getSaldo();
+            if (clientes.get(i).getCuenta() != null) {
+                total = total + clientes.get(i).getCuenta().getSaldo();
             }
-
             i = i + 1;
         }
 
         return total;
-    }
-
-    public void mostrarClientes() {
-        System.out.println("=== CLIENTES DE LA SUCURSAL " + nombreSucursal + " ===");
-
-        if (clientes.size() == 0) {
-            System.out.println("No hay clientes cargados.");
-        } else {
-            int i = 0;
-
-            while (i < clientes.size()) {
-                System.out.println("----------------------------");
-                clientes.get(i).mostrarCliente();
-                i = i + 1;
-            }
-        }
-    }
-
-    public void mostrarResumenSucursal() {
-        System.out.println("=== RESUMEN SUCURSAL ===");
-        System.out.println("Codigo: " + codigoSucursal);
-        System.out.println("Nombre: " + nombreSucursal);
-        System.out.println("Direccion: " + direccion);
-
-        if (administradorSucursal != null) {
-            System.out.println("Administrador: " + administradorSucursal.getNombre());
-            System.out.println("Username admin: " + administradorSucursal.getUsername());
-        } else {
-            System.out.println("Administrador: no asignado");
-        }
-
-        System.out.println("Cantidad de clientes: " + clientes.size());
-        System.out.println("Total en sucursal: $" + calcularTotalSucursal());
-    }
-
-    public ArrayList<Cliente> getClientes() {
-        return clientes;
     }
 }

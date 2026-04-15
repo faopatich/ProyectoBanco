@@ -1,89 +1,59 @@
 import java.util.ArrayList;
 
 public class Banco {
-    private String nombreBanco;
+    private String nombre;
     private ArrayList<Sucursal> sucursales;
-    private ArrayList<Usuario> usuariosSistema;
+    private Admin admin;
 
-    public Banco(String nombreBanco) {
-        this.nombreBanco = nombreBanco;
+    public Banco(String nombre, Admin admin) {
+        this.nombre = nombre;
+        this.admin = admin;
         this.sucursales = new ArrayList<Sucursal>();
-        this.usuariosSistema = new ArrayList<Usuario>();
     }
 
-    public String getNombreBanco() {
-        return nombreBanco;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void agregarUsuarioSistema(Usuario usuario) {
-        usuariosSistema.add(usuario);
+    public Admin getAdmin() {
+        return admin;
     }
 
-    public ArrayList<Usuario> getUsuariosSistema() {
-        return usuariosSistema;
+    public void agregarSucursal(Sucursal sucursal) {
+        sucursales.add(sucursal);
     }
 
-    public boolean existeUsernameSistema(String username) {
-        boolean existe = false;
-        int i = 0;
-
-        while (i < usuariosSistema.size() && !existe) {
-            Usuario actual = usuariosSistema.get(i);
-
-            if (actual.getUsername().equals(username)) {
-                existe = true;
-            }
-
-            i = i + 1;
-        }
-
-        return existe;
+    public ArrayList<Sucursal> getSucursales() {
+        return sucursales;
     }
 
-    public boolean agregarSucursal(Sucursal sucursal) {
-        boolean agregada = false;
-
-        if (buscarSucursalPorCodigo(sucursal.getCodigoSucursal()) == null) {
-            sucursales.add(sucursal);
-            System.out.println("Sucursal agregada correctamente.");
-            agregada = true;
-        } else {
-            System.out.println("Ya existe una sucursal con ese codigo.");
-        }
-
-        return agregada;
-    }
-
-    public Sucursal buscarSucursalPorCodigo(String codigoSucursal) {
+    public Sucursal buscarSucursalPorCodigo(String codigo) {
         Sucursal sucursalEncontrada = null;
         int i = 0;
 
         while (i < sucursales.size() && sucursalEncontrada == null) {
-            Sucursal actual = sucursales.get(i);
-
-            if (actual.getCodigoSucursal().equals(codigoSucursal)) {
-                sucursalEncontrada = actual;
+            if (sucursales.get(i).getCodigo().equals(codigo)) {
+                sucursalEncontrada = sucursales.get(i);
             }
-
             i = i + 1;
         }
 
         return sucursalEncontrada;
     }
 
-    public Cuenta buscarCuentaEnTodoElBanco(String numeroCuenta) {
-        Cuenta cuentaEncontrada = null;
+    public Cliente buscarClientePorUsername(String username) {
+        Cliente clienteEncontrado = null;
         int i = 0;
 
-        while (i < sucursales.size() && cuentaEncontrada == null) {
-            cuentaEncontrada = sucursales.get(i).buscarCuentaPorNumero(numeroCuenta);
+        while (i < sucursales.size() && clienteEncontrado == null) {
+            clienteEncontrado = sucursales.get(i).buscarClientePorUsername(username);
             i = i + 1;
         }
 
-        return cuentaEncontrada;
+        return clienteEncontrado;
     }
 
-    public Cliente buscarClienteGlobalPorDni(String dni) {
+    public Cliente buscarClientePorDni(String dni) {
         Cliente clienteEncontrado = null;
         int i = 0;
 
@@ -93,10 +63,6 @@ public class Banco {
         }
 
         return clienteEncontrado;
-    }
-
-    public boolean existeNumeroCuenta(String numeroCuenta) {
-        return buscarCuentaEnTodoElBanco(numeroCuenta) != null;
     }
 
     public double calcularTotalBanco() {
@@ -112,22 +78,11 @@ public class Banco {
     }
 
     public void mostrarSucursales() {
-        System.out.println("=== SUCURSALES DEL BANCO " + nombreBanco + " ===");
+        int i = 0;
 
-        if (sucursales.size() == 0) {
-            System.out.println("No hay sucursales cargadas.");
-        } else {
-            int i = 0;
-
-            while (i < sucursales.size()) {
-                System.out.println("----------------------------");
-                sucursales.get(i).mostrarResumenSucursal();
-                i = i + 1;
-            }
+        while (i < sucursales.size()) {
+            System.out.println(sucursales.get(i).getCodigo() + " - " + sucursales.get(i).getNombre());
+            i = i + 1;
         }
-    }
-
-    public ArrayList<Sucursal> getSucursales() {
-        return sucursales;
     }
 }
